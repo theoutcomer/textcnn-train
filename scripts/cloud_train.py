@@ -13,16 +13,40 @@ import time
 from datetime import datetime
 
 from src.models.textcnn import TextCNN
-import sys
-import os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-
-from src.training.trainer import Trainer
 from src.data.dataset import TextDataset
 from src.utils.vocab import Vocabulary
 from src.utils.label_mapper import LabelMapper
-from src.utils.logger import setup_logger
-from src.utils.metrics import MetricsTracker
+
+
+class MetricsTracker:
+    """简单的指标跟踪器"""
+    def __init__(self):
+        self.reset()
+    
+    def reset(self):
+        self.all_preds = []
+        self.all_labels = []
+    
+    def update(self, preds, labels):
+        self.all_preds.extend(preds.cpu().numpy())
+        self.all_labels.extend(labels.cpu().numpy())
+    
+    def compute(self):
+        import numpy as np
+        from sklearn.metrics import precision_recall_fscore_support
+        
+        preds = np.array(self.all_preds) > 0.5
+        labels = np.array(self.all_labels)
+        
+        precision, recall, f1, _ = precision_recall_fscore_support(
+            labels, preds, average='micro', zero_division=0
+        )
+        
+        return {
+            'precision': precision,
+            'recall': recall,
+            'f1': f1
+        }
 
 
 def load_config(config_path: str) -> dict:
