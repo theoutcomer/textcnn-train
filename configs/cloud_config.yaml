@@ -1,0 +1,61 @@
+# 云端 GPU 训练配置
+
+# 模型配置
+model:
+  name: "textcnn"
+  vocab_size: 50000
+  embed_dim: 300
+  num_classes: 10
+  filter_sizes: [2, 3, 4, 5]
+  num_filters: 128
+  dropout: 0.5
+  pretrained_embeddings: null  # 可选：预训练词向量路径
+
+# 训练配置
+training:
+  epochs: 50
+  batch_size: 128
+  learning_rate: 0.001
+  weight_decay: 1.0e-5
+  max_len: 512
+  early_stopping:
+    patience: 10
+    min_delta: 0.001
+  scheduler:
+    type: "cosine"  # cosine/step/reduce_on_plateau
+    T_max: 50
+  gradient_clip: 1.0
+  
+# 数据配置
+data:
+  train_path: "data/cnfanews_training.json"
+  val_split: 0.15
+  test_split: 0.05
+  min_content_length: 50
+  max_content_length: 2000
+  
+# 数据增强
+augmentation:
+  enabled: true
+  synonym_replace_prob: 0.1
+  random_delete_prob: 0.05
+  random_swap_prob: 0.05
+  
+# GPU 配置
+gpu:
+  device: "cuda"
+  mixed_precision: true  # 混合精度训练
+  num_workers: 4
+  pin_memory: true
+  
+# 日志和检查点
+logging:
+  log_dir: "logs/cloud"
+  checkpoint_dir: "checkpoints/cloud"
+  save_every: 5  # 每5个epoch保存
+  log_every: 100  # 每100步记录
+  
+# 实验跟踪
+experiment:
+  name: "textcnn_cnfanews_v1"
+  tags: ["textcnn", "cnfanews", "gpu"]

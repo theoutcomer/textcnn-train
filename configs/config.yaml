@@ -1,0 +1,45 @@
+# TextCNN 配置文件
+
+# 模型配置
+model:
+  vocab_size: 50000        # 词表大小
+  embed_dim: 300           # 词向量维度
+  filter_sizes: [2, 3, 4, 5]  # 卷积核尺寸
+  num_filters: 100         # 每种卷积核的数量
+  dropout: 0.5             # Dropout比率
+  max_len: 512             # 最大序列长度
+
+# 训练配置
+training:
+  batch_size: 64           # 批次大小
+  epochs: 20               # 训练轮数
+  learning_rate: 0.001     # 学习率
+  weight_decay: 0.00001    # 权重衰减
+  early_stopping_patience: 5  # 早停耐心值
+  save_dir: "./checkpoints"   # 模型保存目录
+  log_dir: "./logs"           # 日志目录
+  device: "auto"              # 训练设备: auto/cpu/cuda
+
+# 数据配置
+data:
+  train_data_path: null    # 训练数据路径
+  val_data_path: null      # 验证数据路径
+  test_data_path: null     # 测试数据路径
+  vocab_path: "./checkpoints/vocab.pkl"    # 词表保存路径
+  label_path: "./checkpoints/labels.pkl"   # 标签配置保存路径
+  min_freq: 2              # 最小词频
+
+# 标签配置 - 从 subcat_morning 表获取的实际标签
+labels:
+  labels:
+    - 宏观
+    - 金融
+    - 证券
+    - 全球
+    - 评论
+    - 投资
+    - 视频
+    - 粤港澳
+    - 学习经济
+    - 公司
+  threshold: 0.2           # 预测阈值（降低阈值提高召回率）
