@@ -13,6 +13,10 @@ import time
 from datetime import datetime
 
 from src.models.textcnn import TextCNN
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
 from src.training.trainer import Trainer
 from src.data.dataset import TextDataset
 from src.utils.vocab import Vocabulary
